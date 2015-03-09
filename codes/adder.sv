@@ -6,7 +6,10 @@ module adder(
 	output o_bit_cout);
 
 wire and_ab, and_ac, and_bc;
+//sum = A xor B xor Cin
 assign o_bit_sum = i_bit_a ^ i_bit_b ^ i_bit_cin;
+
+//carry = AB+ACin+BCin
 assign and_ab = i_bit_a & i_bit_b;
 assign and_ac = i_bit_a & i_bit_cin;
 assign and_bc = i_bit_b & i_bit_cin;
