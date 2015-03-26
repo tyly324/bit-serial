@@ -11,10 +11,13 @@ module decode(
 	output logic o_con_pcincr
 	);
 
-logic [2:0] count;
-assign o_con_mux8 = count;
+enum {loadacc, addop} state_add;
 
+//bit counter
+logic [2:0] count;
 logic count_rst; 
+assign o_con_mux8 = count;	//count input bit from switches
+
 
 always_ff @ (posedge i_clk)
 if (count_rst)
@@ -38,28 +41,43 @@ begin
 			begin
 				o_con_pcincr = 1;
 				count_rst = 1;
+				state_add = loadacc;
 			end
 		end
 
-		// 2'b10 : begin 	//Add
-		// 	case(count)
-		// 		7 : begin
-		// 			o_con_mux = 0;
-		// 			o_con_gpr_region = 0;
-		// 			o_con_gpr_write = 0;
-		// 			o_con_gpr_shift = 0;
-		// 			o_con_pcincr = 1;
-		// 			count_rst = 1;
-		// 		end
-			
-		// 		default : begin
-		// 			o_con_mux = 0;
-		// 			o_con_gpr_region = 0;
-		// 			o_con_gpr_write = 0;
-		// 			o_con_gpr_shift = 0;
-		// 		end
-		// 	endcase
-		// end
+		2'b10 : begin 	//Add
+			case(state_add)
+				loadacc : begin	//load oprand b into accumulator
+					o_con_muxalu = 1;
+					o_con_gpr_region = 1;
+					o_con_gpr_shift = 1;
+					case(count)
+						7 : begin
+								state_add = addop;
+								count_rst = 1;
+							end
+
+						default : ;
+					endcase
+				end
+
+				addop : begin	//add a and b
+					o_con_mux = 0;
+					o_con_muxalu = 0;
+					o_con_gpr_region = 0;
+					o_con_gpr_write = 1;
+					o_con_gpr_shift = 1;
+					case(count)
+						7 : begin
+							o_con_pcincr = 1;
+							count_rst = 1;
+						end
+
+						default : ;
+					endcase
+				end
+			endcase 
+		end
 
 		2'b11 : begin 	//Load
 			o_con_mux = 1;

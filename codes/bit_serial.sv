@@ -1,5 +1,6 @@
 module bit_serial(
 	input logic i_clk,
+	input logic i_rst,
 	input logic [2:0] i_data_instruction,
 	input logic [7:0] i_data_switch,
 	input logic i_start,
@@ -38,7 +39,7 @@ mux8 u_mux8(
 	);
 
 mux u_mux(
-	.i_data_acc(acc_out),
+	.i_data_alusum(alu_sum),
 	.i_data_switch(mux8_swbit),
 	.i_con_switch(decode_mux),
 	.o_data_res(mux_out)
@@ -46,6 +47,7 @@ mux u_mux(
 
 gpr u_gpr(
 	.i_clk(i_clk),
+	.i_rst(i_rst),
 	.i_con_write(decode_gpr_write),
 	.i_con_shift(decode_gpr_shift),
 	.i_data_in(mux_out),
@@ -70,12 +72,14 @@ alu u_alu(
 
 accumulator u_acc(
 	.i_clk(i_clk),
+	.i_rst(i_rst),
 	.i_data_in(alu_sum),
 	.o_data_out(acc_out)
 	);
 
 carry_reg u_carry(
 	.i_clk(i_clk),
+	.i_rst(i_rst),
 	.i_data_in(alu_carry),
 	.o_data_out(carry_out)
 	);

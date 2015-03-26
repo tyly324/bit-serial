@@ -1,5 +1,6 @@
 module gpr(
 	input logic i_clk, 
+	input logic i_rst,
 	input logic i_con_write, 
 	input logic i_con_shift, 
 	input logic i_data_in, 
@@ -9,18 +10,23 @@ module gpr(
 	);
 
 logic [7:0] sr [0:3];
+
 assign o_data_display = sr[0];
-//temp
-//logic [7:0] reg_sel;
-//assign reg_sel = sr[rd_addr];
 assign o_data_out = sr[rd_addr][0];
 
 always_ff @(posedge i_clk) 
 begin
-	if (i_con_shift)
+	if(i_rst)
+	begin
+		sr[0] <= 0;
+		sr[1] <= 0;
+		sr[2] <= 8'b00110000;
+		sr[3] <= 9'b01010000;
+	end
+	else if(i_con_shift)
 	begin
 		sr[rd_addr][6:0] <= sr[rd_addr][7:1];
-		if (i_con_write)
+		if(i_con_write)
 			sr[rd_addr][7] <= i_data_in;
 		else
 			sr[rd_addr][7] <= sr[rd_addr][0];
