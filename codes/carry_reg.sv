@@ -4,7 +4,7 @@ module carry_reg(
 	output logic o_data_out
 	);
 
-always_ff @(posedge clk) 
+always_ff @(posedge i_clk) 
 begin
 		o_data_out <= i_data_in;
 end
