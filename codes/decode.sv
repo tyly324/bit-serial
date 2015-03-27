@@ -26,6 +26,62 @@ if (count_rst)
 else 
 	count <= count + 1;
 
+always_ff @(posedge i_clk)
+begin 
+	casez(i_instr)
+		3'b000 :if (i_start)
+		begin
+			state_mult = read;
+		end
+
+		3'b001 : state_mult = read; 	//NOP without start
+
+		3'b010 : begin 
+			case(state_mult)
+				read : if(count == 7)
+							state_mult = shift;
+
+				shift : if(count == 3)
+							state_mult = mult;
+
+				mult : if(count == 7)
+							state_mult = read;
+			endcase 
+		end 
+
+		3'b011 : begin 	//X*(1-d)
+			case(state_mult)
+				read : if(count == 7)
+							state_mult = shift;
+
+				shift : if(count == 3)
+							state_mult = mult;
+
+				mult : if(count == 7)
+							state_mult = read; 
+			endcase 
+		end
+
+
+		3'b10? : begin 	//Add
+			if(count == 7)
+					state_mult = read;
+		end
+
+		3'b110 : begin
+			if(~i_start)
+				state_mult = read;
+		end 
+
+
+		3'b111 : begin 	//Load X
+			if(count == 7)
+				state_mult = read;
+		end
+	endcase
+end 
+
+
 always_comb 
 begin
 	o_con_mux = 0;
@@ -40,14 +96,12 @@ begin
 		3'b000 : begin 	//NOP
 			if (i_start)
 			begin
-				state_mult = read;
 				o_con_pcincr = 1;
 				count_rst = 1;
 			end
 		end
 
 		3'b001 : begin 	//NOP without start
-			state_mult = read;
 			o_con_pcincr = 1;
 			count_rst = 1;
 		end
@@ -63,7 +117,6 @@ begin
 					case(count)		
 						7 : begin
 							count_rst = 1;
-							state_mult = shift;
 						end
 
 						default : ;
@@ -91,7 +144,6 @@ begin
 							o_con_gpr_write = 0;
 							o_con_acc_shift = 0;
 							count_rst = 1;
-							state_mult = mult;
 						end
 
 						default : begin 	//begin to read value into acc
@@ -108,7 +160,6 @@ begin
 					o_con_acc_shift = 1;
 					case(count)
 						7 : begin 
-							state_mult = read;
 							o_con_pcincr = 1;
 							count_rst = 1;
 						end
@@ -130,7 +181,6 @@ begin
 					case(count)		
 						7 : begin
 							count_rst = 1;
-							state_mult = shift;
 						end
 
 						default : ;
@@ -158,7 +208,6 @@ begin
 							o_con_gpr_write = 0;
 							o_con_acc_shift = 0;
 							count_rst = 1;
-							state_mult = mult;
 						end
 
 						default : begin 	//begin to read value into acc
@@ -176,7 +225,6 @@ begin
 					o_con_acc_write = 1;
 					case(count)
 						7 : begin 
-							state_mult = read; 
 							o_con_pcincr = 1;
 							count_rst = 1;
 						end
@@ -196,7 +244,6 @@ begin
 			o_con_acc_shift = 1;
 			case(count)
 				7 : begin
-					state_mult = read;
 					o_con_pcincr = 1;
 					count_rst = 1;
 				end 
@@ -208,7 +255,6 @@ begin
 		3'b110 : begin
 			if(~i_start)
 			begin
-				state_mult = read;
 				o_con_pcincr = 1;
 				count_rst = 1;
 			end
@@ -221,7 +267,6 @@ begin
 			o_con_gpr_shift = 1;
 			case(count)
 				7 : begin
-					state_mult = read;
 					o_con_pcincr = 1;
 					count_rst = 1;
 				end
