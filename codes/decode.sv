@@ -13,7 +13,7 @@ module decode(
 	output logic o_con_pcincr
 	);
 
-enum {read, shift, mult} state_mult;
+logic [1:0] state_mult; 	//enum {read, shift, mult} 
 
 //bit counter
 logic [2:0] count;
@@ -32,52 +32,52 @@ begin
 	casez(i_instr)
 		3'b000 :if (i_start)
 		begin
-			state_mult = read;
+			state_mult = 2'b00;
 		end
 
-		3'b001 : state_mult = read; 	//NOP without start
+		3'b001 : state_mult = 2'b00; 	//NOP without start
 
 		3'b010 : begin 
 			case(state_mult)
-				read : if(count == 7)
-							state_mult = shift;
+				2'b00 : if(count == 7)
+							state_mult = 2'b01;
 
-				shift : if(count == 3)
-							state_mult = mult;
+				2'b01 : if(count == 3)
+							state_mult = 2'b11;
 
-				mult : if(count == 7)
-							state_mult = read;
+				2'b11 : if(count == 7)
+							state_mult = 2'b00;
 			endcase 
 		end 
 
 		3'b011 : begin 	//X*(1-d)
 			case(state_mult)
-				read : if(count == 7)
-							state_mult = shift;
+				2'b00 : if(count == 7)
+							state_mult = 2'b01;
 
-				shift : if(count == 3)
-							state_mult = mult;
+				2'b01 : if(count == 3)
+							state_mult = 2'b11;
 
-				mult : if(count == 7)
-							state_mult = read; 
+				2'b11 : if(count == 7)
+							state_mult = 2'b00; 
 			endcase 
 		end
 
 
 		3'b10? : begin 	//Add
 			if(count == 7)
-					state_mult = read;
+					state_mult = 2'b00;
 		end
 
 		3'b110 : begin
 			if(~i_start)
-				state_mult = read;
+				state_mult = 2'b00;
 		end 
 
 
 		3'b111 : begin 	//Load X
 			if(count == 7)
-				state_mult = read;
+				state_mult = 2'b00;
 		end
 	endcase
 end 
@@ -110,7 +110,7 @@ begin
 
 		3'b010 : begin 	//Y*d
 			case(state_mult)
-				read : begin
+				2'b00 : begin
 					o_con_muxalu = 1;
 					o_con_gpr_shift = 1;
 					o_con_acc_shift = 1;
@@ -125,7 +125,7 @@ begin
 					endcase
 				end 
 
-				shift : begin
+				2'b01 : begin
 					case(count)
 						0 : begin
 							o_con_gpr_shift = 1;
@@ -155,7 +155,7 @@ begin
 					endcase
 				end 
 
-				mult : begin
+				2'b11 : begin
 					o_con_muxalu = 0;
 					o_con_gpr_shift = 1;
 					o_con_gpr_write = 1;
@@ -174,7 +174,7 @@ begin
 
 		3'b011 : begin 	//X*(1-d)
 			case(state_mult)
-				read : begin
+				2'b00 : begin
 					o_con_muxalu = 1;
 					o_con_gpr_shift = 1;
 					o_con_acc_shift = 1;
@@ -189,7 +189,7 @@ begin
 					endcase
 				end 
 
-				shift : begin
+				2'b01 : begin
 					case(count)
 						0 : begin
 							o_con_gpr_shift = 1;
@@ -219,7 +219,7 @@ begin
 					endcase
 				end 
 
-				mult : begin
+				2'b11 : begin
 					o_con_muxalu = 0;
 					o_con_gpr_shift = 1;
 					o_con_gpr_write = 1;
