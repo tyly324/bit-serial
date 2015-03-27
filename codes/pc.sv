@@ -6,10 +6,6 @@ module pc(
 	);
 
 wire [2:0] pc_incr;
-increase u_incr(
-	.in(pc),
-	.out(pc_incr)
-	);
 
 logic [2:0] pc;
 assign o_addr_pc = pc;
@@ -21,5 +17,10 @@ begin
 	else if(i_con_incr)
 		pc <= pc_incr;
 end
+
+increase u_incr(
+	.in(pc),
+	.out(pc_incr)
+	);
 
 endmodule
