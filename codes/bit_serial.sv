@@ -42,7 +42,7 @@ mux8 u_mux8(
 	.o_data_swbit(mux8_swbit)
 	);
 
-mux u_mux(
+muxgpr u_muxgpr(
 	.i_data_alusum(alu_sum),
 	.i_data_switch(mux8_swbit),
 	.i_con_switch(decode_mux),

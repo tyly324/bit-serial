@@ -4,6 +4,6 @@ module muxalu(
 	output logic o_data_out
 	);
 
-assign o_data_out = i_con_0 ? 0 : i_data_acc;
+assign o_data_out = i_con_0 ? 1'b0 : i_data_acc;
 
 endmodule

@@ -1,4 +1,4 @@
-module mux(
+module muxgpr(
 	input logic i_data_alusum,
 	input logic i_data_switch,
 	input logic i_con_switch,
