@@ -1,5 +1,4 @@
 module mem(
-	input logic i_clk,
 	input logic i_rst,
 	input logic [2:0] i_pc,
 	output logic [2:0] o_instr
@@ -8,8 +7,7 @@ module mem(
 logic [2:0] mem [0:7];
 assign o_instr = mem[i_pc];
 
-always_ff @(posedge i_clk)
-if(i_rst)
+always_ff @(posedge i_rst)
 begin
 	mem[0] = 3'b000;
 	mem[1] = 3'b111;

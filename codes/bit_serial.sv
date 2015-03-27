@@ -3,11 +3,12 @@ module bit_serial(
 	input logic i_rst,
 	input logic [7:0] i_data_switch,
 	input logic i_start,
-	output logic decode_pcincr,
+//	output logic decode_pcincr,
 	output logic [7:0] y,
-	output logic [7:0] x
+//	output logic [7:0] x
 	);
 
+wire [7:0] x;
 wire [2:0] pc_out;
 wire [2:0] mem_out;
 wire [2:0] increase_out;

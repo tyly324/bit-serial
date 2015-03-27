@@ -21,7 +21,7 @@ logic count_rst;
 assign o_con_mux8 = count;	//count input bit from switches
 
 
-always_ff @ (posedge i_clk)
+always_ff @ (posedge i_clk, posedge count_rst)
 if (count_rst)
 	count <= 0;
 else 
@@ -42,7 +42,7 @@ begin
 				2'b00 : if(count == 7)
 							state_mult = 2'b01;
 
-				2'b01 : if(count == 3)
+				2'b01 : if(count == 7)
 							state_mult = 2'b11;
 
 				2'b11 : if(count == 7)
@@ -55,7 +55,7 @@ begin
 				2'b00 : if(count == 7)
 							state_mult = 2'b01;
 
-				2'b01 : if(count == 3)
+				2'b01 : if(count == 7)
 							state_mult = 2'b11;
 
 				2'b11 : if(count == 7)
@@ -103,7 +103,7 @@ begin
 			end
 		end
 
-		3'b001 : begin 	//NOP without start
+		3'b001 : begin 	//stall
 			o_con_pcincr = 1;
 			count_rst = 1;
 		end
@@ -116,13 +116,7 @@ begin
 					o_con_acc_shift = 1;
 					o_con_gpr_write = 1;
 					o_con_acc_write = 1;
-					case(count)		
-						7 : begin
-							count_rst = 1;
-						end
-
-						default : ;
-					endcase
+					
 				end 
 
 				2'b01 : begin
@@ -141,12 +135,6 @@ begin
 							o_con_gpr_shift = 0;
 							o_con_acc_shift = 1;
 						end
-		
-						3 : begin
-							o_con_gpr_write = 0;
-							o_con_acc_shift = 0;
-							count_rst = 1;
-						end
 
 						default : begin 	//begin to read value into acc
 							o_con_gpr_shift = 0;
@@ -163,7 +151,6 @@ begin
 					case(count)
 						7 : begin 
 							o_con_pcincr = 1;
-							count_rst = 1;
 						end
 
 						default : ;
@@ -180,13 +167,6 @@ begin
 					o_con_acc_shift = 1;
 					o_con_gpr_write = 1;
 					o_con_acc_write = 1;
-					case(count)		
-						7 : begin
-							count_rst = 1;
-						end
-
-						default : ;
-					endcase
 				end 
 
 				2'b01 : begin
@@ -205,12 +185,6 @@ begin
 							o_con_gpr_shift = 0;
 							o_con_acc_shift = 1;
 						end
-		
-						3 : begin
-							o_con_gpr_write = 0;
-							o_con_acc_shift = 0;
-							count_rst = 1;
-						end
 
 						default : begin 	//begin to read value into acc
 							o_con_gpr_shift = 0;
@@ -228,7 +202,6 @@ begin
 					case(count)
 						7 : begin 
 							o_con_pcincr = 1;
-							count_rst = 1;
 						end
 
 						default : ;
@@ -247,14 +220,13 @@ begin
 			case(count)
 				7 : begin
 					o_con_pcincr = 1;
-					count_rst = 1;
 				end 
 
 				default : ;
 			endcase
 		end
 
-		3'b110 : begin
+		3'b110 : begin 	//wait switch off
 			if(~i_start)
 			begin
 				o_con_pcincr = 1;
@@ -270,7 +242,6 @@ begin
 			case(count)
 				7 : begin
 					o_con_pcincr = 1;
-					count_rst = 1;
 				end
 			
 				default : ;
