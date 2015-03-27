@@ -2,33 +2,32 @@ module testbench;
 
 logic i_clk;
 logic i_rst;
-logic [2:0] i_data_instruction;
 logic [7:0] i_data_switch;
 logic i_start;
-logic o_con_pcincr;
+logic decode_pcincr;
 logic [7:0] x, y;
 
 bit_serial u_bs(.*);
 
-logic [2:0] mem [0:7];
-logic [2:0] pc;
-assign i_data_instruction = mem[pc];
+// logic [2:0] mem [0:7];
+// logic [2:0] pc;
+// assign i_data_instruction = mem[pc];
 
-initial
-begin
-	mem[0] = 3'b000;
-	mem[1] = 3'b111;
-	mem[2] = 3'b001; 	//stall
-	mem[3] = 3'b010; 	//mult y, d
-	mem[4] = 3'b001; 	//stall
-	mem[5] = 3'b011; 	//mult x, 1-d
-	mem[6] = 3'b100; 	//add y,x
-	mem[7] = 3'b110; 	//wait switch off
-	pc = 0;
-end
+// initial
+// begin
+// 	mem[0] = 3'b000;
+// 	mem[1] = 3'b111;
+// 	mem[2] = 3'b001; 	//stall
+// 	mem[3] = 3'b010; 	//mult y, d
+// 	mem[4] = 3'b001; 	//stall
+// 	mem[5] = 3'b011; 	//mult x, 1-d
+// 	mem[6] = 3'b100; 	//add y,x
+// 	mem[7] = 3'b110; 	//wait switch off
+// 	pc = 0;
+// end
 
-always_ff @ (posedge i_clk)
-pc = pc + o_con_pcincr;
+// always_ff @ (posedge i_clk)
+// pc = pc + o_con_pcincr;
 
 initial 
 begin
