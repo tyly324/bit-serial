@@ -9,16 +9,23 @@ module bit_serial(
 	output logic [7:0] x
 	);
 
+wire [2:0] increase_out;
 wire [2:0] decode_mux8;
 wire mux8_swbit;
 wire acc_out;
 wire alu_sum, alu_carry;
 wire gpr_out;
 
+increase u_increase(
+	.in(decode_mux8),
+	.out(increase_out)
+	);
+
 decode u_decode(
 	.i_clk(i_clk),
 	.i_instr(i_data_instruction),
 	.i_start(i_start),
+	.i_data_count(increase_out),
 	.o_con_mux8(decode_mux8),
 	.o_con_mux(decode_mux),
 	.o_con_muxalu(decode_muxalu),
