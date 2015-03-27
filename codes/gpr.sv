@@ -16,7 +16,7 @@ assign ry = sr[0];
 assign rx = sr[1];
 assign o_data_out = sr[rd_addr][0];
 
-always_ff @(posedge i_clk) 
+always_ff @(posedge i_clk, posedge i_rst) 
 begin
 	if(i_rst)
 	begin

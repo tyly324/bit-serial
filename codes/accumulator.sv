@@ -10,7 +10,7 @@ module accumulator(
 logic [7:0] register;
 assign o_data_out = register[0];
 
-always_ff @(posedge i_clk)
+always_ff @(posedge i_clk, posedge i_rst)
 begin
 	if(i_rst)
 		register <= 0;

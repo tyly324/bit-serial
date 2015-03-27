@@ -10,7 +10,7 @@ wire [2:0] pc_incr;
 logic [2:0] pc;
 assign o_addr_pc = pc;
 
-always_ff @(posedge i_clk)
+always_ff @(posedge i_clk, posedge i_rst)
 begin
 	if(i_rst)
 		pc <= 3'b0;
