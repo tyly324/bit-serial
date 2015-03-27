@@ -5,30 +5,27 @@ module bit_serial(
 	input logic [7:0] i_data_switch,
 	input logic i_start,
 	output logic o_con_pcincr,
-	output logic [7:0] o_data_display
+	output logic [7:0] y,
+	output logic [7:0] x
 	);
 
 wire [2:0] decode_mux8;
-wire decode_gpr_region;
 wire mux8_swbit;
 wire acc_out;
 wire alu_sum, alu_carry;
 wire gpr_out;
-wire [1:0] gpr_addr;
-assign gpr_addr = {decode_gpr_region, i_data_instruction[0]};
-
-
 
 decode u_decode(
 	.i_clk(i_clk),
-	.i_instr(i_data_instruction[2:1]),
+	.i_instr(i_data_instruction),
 	.i_start(i_start),
 	.o_con_mux8(decode_mux8),
 	.o_con_mux(decode_mux),
 	.o_con_muxalu(decode_muxalu),
-	.o_con_gpr_region(decode_gpr_region),
 	.o_con_gpr_write(decode_gpr_write),
 	.o_con_gpr_shift(decode_gpr_shift),
+	.o_con_acc_shift(decode_acc_shift),
+	.o_con_acc_write(decode_acc_write),
 	.o_con_pcincr(o_con_pcincr)
 	);
 
@@ -51,9 +48,10 @@ gpr u_gpr(
 	.i_con_write(decode_gpr_write),
 	.i_con_shift(decode_gpr_shift),
 	.i_data_in(mux_out),
-	.rd_addr(gpr_addr),
+	.rd_addr(i_data_instruction[0]),
 	.o_data_out(gpr_out),
-	.o_data_display(o_data_display)
+	.ry(y),
+	.rx(x)
 	);
 
 muxalu u_muxalu(
@@ -73,6 +71,8 @@ alu u_alu(
 accumulator u_acc(
 	.i_clk(i_clk),
 	.i_rst(i_rst),
+	.i_con_shift(decode_acc_shift),
+	.i_con_write(decode_acc_write),
 	.i_data_in(alu_sum),
 	.o_data_out(acc_out)
 	);
