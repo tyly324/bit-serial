@@ -16,14 +16,9 @@ assign ry = sr[0];
 assign rx = sr[1];
 assign o_data_out = sr[rd_addr][0];
 
-always_ff @(posedge i_clk, posedge i_rst) 
+always_ff @(posedge i_clk) 
 begin
-	if(i_rst)
-	begin
-		sr[0] <= 0;
-		sr[1] <= 0;
-	end
-	else if(i_con_shift)
+	if(i_con_shift)
 	begin
 		sr[rd_addr][6:0] <= sr[rd_addr][7:1];
 		if(i_con_write)
