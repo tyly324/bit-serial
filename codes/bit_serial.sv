@@ -3,12 +3,12 @@ module bit_serial(
 	input logic i_rst,
 	input logic [7:0] i_data_switch,
 	input logic i_start,
-//	output logic decode_pcincr,
+	output logic decode_pcincr,
 	output logic [7:0] y,
-//	output logic [7:0] x
+	output logic [7:0] x
 	);
 
-wire [7:0] x;
+//wire [7:0] x;
 wire [2:0] pc_out;
 wire [2:0] mem_out;
 wire [2:0] increase_out;
@@ -26,7 +26,6 @@ pc u_pc(
 	);
 
 mem u_mem(
-	.i_clk(i_clk),
 	.i_rst(i_rst),
 	.i_pc(pc_out),
 	.o_instr(mem_out)
@@ -79,7 +78,7 @@ gpr u_gpr(
 	.i_rst(i_rst),
 	.i_con_shift(decode_gpr_shift),
 	.i_con_sign(decode_gpr_sign),
-	.i_data_in(muxsign_out),
+	.i_data_in(muxgpr_out),
 	.i_data_sign(signreg_out),
 	.rd_addr(mem_out[0]),
 	.o_data_out(gpr_out),

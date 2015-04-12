@@ -11,6 +11,7 @@ module decode(
 	output logic o_con_acc_shift,
 	output logic o_con_acc_sign,
 	output logic o_con_sign_store,
+	output logic o_con_blockcarry,
 	output logic o_con_pcincr
 	);
 
@@ -94,6 +95,7 @@ begin
 	o_con_acc_sign = 0;
 	o_con_pcincr = 0;
 	o_con_sign_store = 0;
+	o_con_blockcarry = 0;
 	count_rst = 0;
 
 	casez(i_instr)
@@ -154,6 +156,9 @@ begin
 					o_con_gpr_sign = 0;
 					o_con_acc_shift = 1;
 					case(count)
+						0 : begin 
+							o_con_blockcarry = 1;
+						end
 						7 : begin 
 							o_con_pcincr = 1;
 						end
@@ -209,6 +214,9 @@ begin
 					o_con_acc_shift = 1;
 					o_con_acc_sign = 0;
 					case(count)
+						0 : begin 
+							o_con_blockcarry = 1;
+						end
 						7 : begin 
 							o_con_pcincr = 1;
 						end
@@ -227,6 +235,9 @@ begin
 			o_con_gpr_shift = 1;
 			o_con_acc_shift = 1;
 			case(count)
+				0 : begin 
+					o_con_blockcarry = 1;
+				end
 				7 : begin
 					o_con_pcincr = 1;
 				end 

@@ -7,14 +7,15 @@ module signreg(
 	);
 
 logic msb;
+assign o_data_signbit = msb;
 
-always_ff @(posedge i_clk, negedge i_rst) 
+always_ff @(posedge i_clk, posedge i_rst) 
 begin
 	if(i_rst) 
 	begin
 		msb <= 0;
 	end 
-	else if(i_con_write)
+	else if(i_con_store)
 	begin
 		msb <= i_data_signbit;
 	end
