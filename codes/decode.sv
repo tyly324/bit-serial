@@ -7,9 +7,10 @@ module decode(
 	output logic o_con_mux,
 	output logic o_con_muxalu,
 	output logic o_con_gpr_shift,
-	output logic o_con_gpr_write,
+	output logic o_con_gpr_sign,
 	output logic o_con_acc_shift,
-	output logic o_con_acc_write,
+	output logic o_con_acc_sign,
+	output logic o_con_sign_store,
 	output logic o_con_pcincr
 	);
 
@@ -37,7 +38,7 @@ begin
 
 		3'b001 : state_mult = 2'b00; 	//NOP without start
 
-		3'b010 : begin 
+		3'b010 : begin //Y*d
 			case(state_mult)
 				2'b00 : if(count == 7)
 							state_mult = 2'b01;
@@ -88,10 +89,11 @@ begin
 	o_con_mux = 0;
 	o_con_muxalu = 0;
 	o_con_gpr_shift = 0;
-	o_con_gpr_write = 0;
+	o_con_gpr_sign = 0;
 	o_con_acc_shift = 0;
-	o_con_acc_write = 0;
+	o_con_acc_sign = 0;
 	o_con_pcincr = 0;
+	o_con_sign_store = 0;
 	count_rst = 0;
 
 	casez(i_instr)
@@ -114,12 +116,15 @@ begin
 					o_con_muxalu = 1;
 					o_con_gpr_shift = 1;
 					o_con_acc_shift = 1;
-					o_con_gpr_write = 1;
-					o_con_acc_write = 1;
-					
+					o_con_gpr_sign = 0;
+					o_con_acc_sign = 0;
+					if(count==7)
+						o_con_sign_store = 1;
 				end 
 
 				2'b01 : begin
+					o_con_gpr_sign = 1;
+					o_con_acc_sign = 1;
 					case(count)
 						0 : begin
 							o_con_gpr_shift = 1;
@@ -146,7 +151,7 @@ begin
 				2'b11 : begin
 					o_con_muxalu = 0;
 					o_con_gpr_shift = 1;
-					o_con_gpr_write = 1;
+					o_con_gpr_sign = 0;
 					o_con_acc_shift = 1;
 					case(count)
 						7 : begin 
@@ -165,11 +170,15 @@ begin
 					o_con_muxalu = 1;
 					o_con_gpr_shift = 1;
 					o_con_acc_shift = 1;
-					o_con_gpr_write = 1;
-					o_con_acc_write = 1;
+					o_con_gpr_sign = 0;
+					o_con_acc_sign = 0;
+					if(count==7)
+						o_con_sign_store = 1;
 				end 
 
 				2'b01 : begin
+					o_con_gpr_sign = 1;
+					o_con_acc_sign = 1;
 					case(count)
 						0 : begin
 							o_con_gpr_shift = 1;
@@ -196,9 +205,9 @@ begin
 				2'b11 : begin
 					o_con_muxalu = 0;
 					o_con_gpr_shift = 1;
-					o_con_gpr_write = 1;
+					o_con_gpr_sign = 0;
 					o_con_acc_shift = 1;
-					o_con_acc_write = 1;
+					o_con_acc_sign = 0;
 					case(count)
 						7 : begin 
 							o_con_pcincr = 1;
@@ -214,7 +223,7 @@ begin
 		3'b10? : begin 	//Add
 			o_con_mux = 0;
 			o_con_muxalu = 0;
-			o_con_gpr_write = 1;
+			o_con_gpr_sign = 0;
 			o_con_gpr_shift = 1;
 			o_con_acc_shift = 1;
 			case(count)
@@ -237,7 +246,7 @@ begin
 
 		3'b111 : begin 	//Load X
 			o_con_mux = 1;
-			o_con_gpr_write = 1;
+			o_con_gpr_sign = 0;
 			o_con_gpr_shift = 1;
 			case(count)
 				7 : begin

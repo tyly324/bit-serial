@@ -1,9 +1,10 @@
 module gpr(
 	input logic i_clk, 
 	input logic i_rst,
-	input logic i_con_write, 
 	input logic i_con_shift, 
+	input logic i_con_sign, 
 	input logic i_data_in, 
+	input logic i_data_sign,
 	input logic rd_addr,
 	output logic o_data_out,
 	output logic [7:0] ry,
@@ -26,10 +27,10 @@ begin
 	else if(i_con_shift)
 	begin
 		sr[rd_addr][6:0] <= sr[rd_addr][7:1];
-		if(i_con_write)
-			sr[rd_addr][7] <= i_data_in;
+		if(i_con_sign)
+			sr[rd_addr][7] <= i_data_sign;
 		else
-			sr[rd_addr][7] <= 0;
+			sr[rd_addr][7] <= i_data_in;
 	end
 end
 

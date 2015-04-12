@@ -9,8 +9,8 @@ assign o_instr = mem[i_pc];
 
 always_ff @(posedge i_rst)
 begin
-	mem[0] = 3'b000;
-	mem[1] = 3'b111;
+	mem[0] = 3'b000;	//NOP
+	mem[1] = 3'b111;	//load X
 	mem[2] = 3'b001; 	//stall
 	mem[3] = 3'b010; 	//mult y, d
 	mem[4] = 3'b001; 	//stall

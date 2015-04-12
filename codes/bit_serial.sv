@@ -45,10 +45,11 @@ decode u_decode(
 	.o_con_mux8(decode_mux8),
 	.o_con_mux(decode_mux),
 	.o_con_muxalu(decode_muxalu),
-	.o_con_gpr_write(decode_gpr_write),
 	.o_con_gpr_shift(decode_gpr_shift),
+	.o_con_gpr_sign(decode_gpr_sign),
 	.o_con_acc_shift(decode_acc_shift),
-	.o_con_acc_write(decode_acc_write),
+	.o_con_acc_sign(decode_acc_sign),
+	.o_con_sign_store(decode_sign_store),
 	.o_con_pcincr(decode_pcincr)
 	);
 
@@ -62,15 +63,24 @@ muxgpr u_muxgpr(
 	.i_data_alusum(alu_sum),
 	.i_data_switch(mux8_swbit),
 	.i_con_switch(decode_mux),
-	.o_data_res(mux_out)
+	.o_data_res(muxgpr_out)
+	);
+
+signreg u_signreg(
+	.i_clk(i_clk),
+	.i_rst(i_rst),
+	.i_data_signbit(alu_sum),
+	.i_con_store(decode_sign_store),
+	.o_data_signbit(signreg_out)
 	);
 
 gpr u_gpr(
 	.i_clk(i_clk),
 	.i_rst(i_rst),
-	.i_con_write(decode_gpr_write),
 	.i_con_shift(decode_gpr_shift),
-	.i_data_in(mux_out),
+	.i_con_sign(decode_gpr_sign),
+	.i_data_in(muxsign_out),
+	.i_data_sign(signreg_out),
 	.rd_addr(mem_out[0]),
 	.o_data_out(gpr_out),
 	.ry(y),
@@ -95,8 +105,9 @@ accumulator u_acc(
 	.i_clk(i_clk),
 	.i_rst(i_rst),
 	.i_con_shift(decode_acc_shift),
-	.i_con_write(decode_acc_write),
+	.i_con_sign(decode_acc_sign),
 	.i_data_in(alu_sum),
+	.i_data_sign(signreg_out),
 	.o_data_out(acc_out)
 	);
 
