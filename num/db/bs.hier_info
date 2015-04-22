@@ -1,0 +1,329 @@
+|bitSerialCPU
+clk => clk.IN7
+SW[0] => i_rst.IN5
+SW[1] => i_start.IN1
+SW[2] => i_data_switch[0].IN1
+SW[3] => i_data_switch[1].IN1
+SW[4] => i_data_switch[2].IN1
+SW[5] => i_data_switch[3].IN1
+SW[6] => i_data_switch[4].IN1
+SW[7] => i_data_switch[5].IN1
+SW[8] => i_data_switch[6].IN1
+SW[9] => i_data_switch[7].IN1
+LED[0] <= gpr:u_gpr.ry
+LED[1] <= gpr:u_gpr.ry
+LED[2] <= gpr:u_gpr.ry
+LED[3] <= gpr:u_gpr.ry
+LED[4] <= gpr:u_gpr.ry
+LED[5] <= gpr:u_gpr.ry
+LED[6] <= gpr:u_gpr.ry
+LED[7] <= gpr:u_gpr.ry
+
+
+|bitSerialCPU|pc:u_pc
+i_clk => pc[0].CLK
+i_clk => pc[1].CLK
+i_clk => pc[2].CLK
+i_rst => pc[0].ACLR
+i_rst => pc[1].ACLR
+i_rst => pc[2].ACLR
+i_con_incr => pc[2].ENA
+i_con_incr => pc[1].ENA
+i_con_incr => pc[0].ENA
+i_addr_pcin[0] => pc[0].DATAIN
+i_addr_pcin[1] => pc[1].DATAIN
+i_addr_pcin[2] => pc[2].DATAIN
+o_addr_pc[0] <= pc[0].DB_MAX_OUTPUT_PORT_TYPE
+o_addr_pc[1] <= pc[1].DB_MAX_OUTPUT_PORT_TYPE
+o_addr_pc[2] <= pc[2].DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|mem:u_mem
+address[0] => progMem.RADDR
+address[1] => progMem.RADDR1
+address[2] => progMem.RADDR2
+I[0] <= progMem.DATAOUT
+I[1] <= progMem.DATAOUT1
+I[2] <= progMem.DATAOUT2
+
+
+|bitSerialCPU|increase:u_increase
+in[0] => out_a.IN0
+in[0] => out_b.IN0
+in[0] => out[0].DATAIN
+in[1] => out_a.IN1
+in[1] => out_b.IN1
+in[2] => out_a.IN1
+in[2] => out_a.IN1
+out[0] <= in[0].DB_MAX_OUTPUT_PORT_TYPE
+out[1] <= out_b.DB_MAX_OUTPUT_PORT_TYPE
+out[2] <= out_a.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|decode:u_decode
+i_clk => count[0].CLK
+i_clk => count[1].CLK
+i_clk => count[2].CLK
+i_clk => state_mult~4.DATAIN
+i_instr[0] => Mux0.IN10
+i_instr[0] => Mux1.IN10
+i_instr[0] => Mux2.IN10
+i_instr[0] => Decoder1.IN2
+i_instr[0] => Mux3.IN8
+i_instr[0] => Mux4.IN10
+i_instr[0] => Mux5.IN9
+i_instr[0] => Mux6.IN9
+i_instr[0] => Mux7.IN8
+i_instr[0] => Mux8.IN10
+i_instr[0] => Mux9.IN10
+i_instr[0] => Mux10.IN8
+i_instr[0] => Mux11.IN10
+i_instr[0] => Mux12.IN10
+i_instr[1] => Mux0.IN9
+i_instr[1] => Mux1.IN9
+i_instr[1] => Mux2.IN9
+i_instr[1] => Decoder1.IN1
+i_instr[1] => Mux3.IN7
+i_instr[1] => Mux4.IN9
+i_instr[1] => Mux5.IN8
+i_instr[1] => Mux6.IN8
+i_instr[1] => Mux7.IN7
+i_instr[1] => Mux8.IN9
+i_instr[1] => Mux9.IN9
+i_instr[1] => Mux10.IN7
+i_instr[1] => Mux11.IN9
+i_instr[1] => Mux12.IN9
+i_instr[2] => Mux0.IN8
+i_instr[2] => Mux1.IN8
+i_instr[2] => Mux2.IN8
+i_instr[2] => Decoder1.IN0
+i_instr[2] => Mux3.IN6
+i_instr[2] => Mux4.IN8
+i_instr[2] => Mux5.IN7
+i_instr[2] => Mux6.IN7
+i_instr[2] => Mux7.IN6
+i_instr[2] => Mux8.IN8
+i_instr[2] => Mux9.IN8
+i_instr[2] => Mux10.IN6
+i_instr[2] => Mux11.IN8
+i_instr[2] => Mux12.IN8
+i_start => state_mult.OUTPUTSELECT
+i_start => state_mult.OUTPUTSELECT
+i_start => state_mult.OUTPUTSELECT
+i_start => Mux5.IN10
+i_start => Mux6.IN10
+i_start => Mux5.IN3
+i_start => Mux6.IN6
+i_start => state_mult.OUTPUTSELECT
+i_start => state_mult.OUTPUTSELECT
+i_start => state_mult.OUTPUTSELECT
+i_data_count[0] => count[0].DATAIN
+i_data_count[1] => count[1].DATAIN
+i_data_count[2] => count[2].DATAIN
+o_con_mux8[0] <= count[0].DB_MAX_OUTPUT_PORT_TYPE
+o_con_mux8[1] <= count[1].DB_MAX_OUTPUT_PORT_TYPE
+o_con_mux8[2] <= count[2].DB_MAX_OUTPUT_PORT_TYPE
+o_con_mux <= Decoder1.DB_MAX_OUTPUT_PORT_TYPE
+o_con_muxalu <= Mux7.DB_MAX_OUTPUT_PORT_TYPE
+o_con_gpr_shift <= Mux4.DB_MAX_OUTPUT_PORT_TYPE
+o_con_gpr_sign <= Mux3.DB_MAX_OUTPUT_PORT_TYPE
+o_con_acc_shift <= Mux8.DB_MAX_OUTPUT_PORT_TYPE
+o_con_acc_sign <= Mux10.DB_MAX_OUTPUT_PORT_TYPE
+o_con_sign_store <= Mux11.DB_MAX_OUTPUT_PORT_TYPE
+o_con_blockcarry <= Mux9.DB_MAX_OUTPUT_PORT_TYPE
+o_con_pcincr <= Mux5.DB_MAX_OUTPUT_PORT_TYPE
+o_con_check_carry <= Mux12.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|mux8:u_mux8
+i_con_choice[0] => Mux0.IN2
+i_con_choice[1] => Mux0.IN1
+i_con_choice[2] => Mux0.IN0
+i_data_switch[0] => Mux0.IN10
+i_data_switch[1] => Mux0.IN9
+i_data_switch[2] => Mux0.IN8
+i_data_switch[3] => Mux0.IN7
+i_data_switch[4] => Mux0.IN6
+i_data_switch[5] => Mux0.IN5
+i_data_switch[6] => Mux0.IN4
+i_data_switch[7] => Mux0.IN3
+o_data_swbit <= Mux0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|muxgpr:u_muxgpr
+i_data_alusum => o_data_res.DATAA
+i_data_switch => o_data_res.DATAB
+i_con_switch => o_data_res.OUTPUTSELECT
+o_data_res <= o_data_res.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|signreg:u_signreg
+i_clk => msb.CLK
+i_rst => msb.ACLR
+i_data_signbit => msb.DATAIN
+i_con_store => msb.ENA
+o_data_signbit <= msb.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|gpr:u_gpr
+i_clk => sr[1][0].CLK
+i_clk => sr[1][1].CLK
+i_clk => sr[1][2].CLK
+i_clk => sr[1][3].CLK
+i_clk => sr[1][4].CLK
+i_clk => sr[1][5].CLK
+i_clk => sr[1][6].CLK
+i_clk => sr[1][7].CLK
+i_clk => sr[0][0].CLK
+i_clk => sr[0][1].CLK
+i_clk => sr[0][2].CLK
+i_clk => sr[0][3].CLK
+i_clk => sr[0][4].CLK
+i_clk => sr[0][5].CLK
+i_clk => sr[0][6].CLK
+i_clk => sr[0][7].CLK
+i_rst => sr[1][0].ACLR
+i_rst => sr[1][1].ACLR
+i_rst => sr[1][2].ACLR
+i_rst => sr[1][3].ACLR
+i_rst => sr[1][4].ACLR
+i_rst => sr[1][5].ACLR
+i_rst => sr[1][6].ACLR
+i_rst => sr[1][7].ACLR
+i_rst => sr[0][0].ACLR
+i_rst => sr[0][1].ACLR
+i_rst => sr[0][2].ACLR
+i_rst => sr[0][3].ACLR
+i_rst => sr[0][4].ACLR
+i_rst => sr[0][5].ACLR
+i_rst => sr[0][6].ACLR
+i_rst => sr[0][7].ACLR
+i_con_shift => sr[0][7].ENA
+i_con_shift => sr[0][6].ENA
+i_con_shift => sr[0][5].ENA
+i_con_shift => sr[0][4].ENA
+i_con_shift => sr[0][3].ENA
+i_con_shift => sr[0][2].ENA
+i_con_shift => sr[0][1].ENA
+i_con_shift => sr[0][0].ENA
+i_con_shift => sr[1][7].ENA
+i_con_shift => sr[1][6].ENA
+i_con_shift => sr[1][5].ENA
+i_con_shift => sr[1][4].ENA
+i_con_shift => sr[1][3].ENA
+i_con_shift => sr[1][2].ENA
+i_con_shift => sr[1][1].ENA
+i_con_shift => sr[1][0].ENA
+i_con_sign => sr.OUTPUTSELECT
+i_con_sign => sr.OUTPUTSELECT
+i_data_in => sr.DATAB
+i_data_in => sr.DATAB
+i_data_sign => sr.DATAB
+i_data_sign => sr.DATAB
+rd_addr => Decoder0.IN0
+o_data_out <= o_data_out.DB_MAX_OUTPUT_PORT_TYPE
+ry[0] <= sr[0][0].DB_MAX_OUTPUT_PORT_TYPE
+ry[1] <= sr[0][1].DB_MAX_OUTPUT_PORT_TYPE
+ry[2] <= sr[0][2].DB_MAX_OUTPUT_PORT_TYPE
+ry[3] <= sr[0][3].DB_MAX_OUTPUT_PORT_TYPE
+ry[4] <= sr[0][4].DB_MAX_OUTPUT_PORT_TYPE
+ry[5] <= sr[0][5].DB_MAX_OUTPUT_PORT_TYPE
+ry[6] <= sr[0][6].DB_MAX_OUTPUT_PORT_TYPE
+ry[7] <= sr[0][7].DB_MAX_OUTPUT_PORT_TYPE
+rx[0] <= sr[1][0].DB_MAX_OUTPUT_PORT_TYPE
+rx[1] <= sr[1][1].DB_MAX_OUTPUT_PORT_TYPE
+rx[2] <= sr[1][2].DB_MAX_OUTPUT_PORT_TYPE
+rx[3] <= sr[1][3].DB_MAX_OUTPUT_PORT_TYPE
+rx[4] <= sr[1][4].DB_MAX_OUTPUT_PORT_TYPE
+rx[5] <= sr[1][5].DB_MAX_OUTPUT_PORT_TYPE
+rx[6] <= sr[1][6].DB_MAX_OUTPUT_PORT_TYPE
+rx[7] <= sr[1][7].DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|muxalu:u_muxalu
+i_data_acc => o_data_out.DATAA
+i_con_0 => o_data_out.OUTPUTSELECT
+o_data_out <= o_data_out.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|alu:u_alu
+i_data_a => o_data_sum.IN0
+i_data_a => and_ab.IN0
+i_data_a => and_ac.IN0
+i_data_b => o_data_sum.IN1
+i_data_b => and_ab.IN1
+i_data_b => and_bc.IN0
+i_data_c => o_data_sum.IN1
+i_data_c => and_ac.IN1
+i_data_c => and_bc.IN1
+o_data_sum <= o_data_sum.DB_MAX_OUTPUT_PORT_TYPE
+o_data_carry <= o_data_carry.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|accumulator:u_acc
+i_clk => register[0].CLK
+i_clk => register[1].CLK
+i_clk => register[2].CLK
+i_clk => register[3].CLK
+i_clk => register[4].CLK
+i_clk => register[5].CLK
+i_clk => register[6].CLK
+i_clk => register[7].CLK
+i_rst => register[0].ACLR
+i_rst => register[1].ACLR
+i_rst => register[2].ACLR
+i_rst => register[3].ACLR
+i_rst => register[4].ACLR
+i_rst => register[5].ACLR
+i_rst => register[6].ACLR
+i_rst => register[7].ACLR
+i_con_shift => register[7].ENA
+i_con_shift => register[6].ENA
+i_con_shift => register[5].ENA
+i_con_shift => register[4].ENA
+i_con_shift => register[3].ENA
+i_con_shift => register[2].ENA
+i_con_shift => register[1].ENA
+i_con_shift => register[0].ENA
+i_con_sign => register.OUTPUTSELECT
+i_data_in => register.DATAA
+i_data_sign => register.DATAB
+o_data_out <= register[0].DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|carry_reg:u_carry
+i_clk => carry.CLK
+i_rst => carry.ACLR
+i_data_in => carry.DATAIN
+i_con_blockcarry => o_data_out.OUTPUTSELECT
+o_data_out <= o_data_out.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|muxcarry:u_muxc
+i_data_carry => o_data_aluc.DATAA
+i_con_carry => o_data_aluc.OUTPUTSELECT
+o_data_aluc <= o_data_aluc.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|check_carry:u_checkc
+i_clk => a.CLK
+i_clk => g.CLK
+i_data_gpr => g.DATAIN
+i_data_acc => a.DATAIN
+i_con_check => o_con_carry.IN1
+o_con_carry <= o_con_carry.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bitSerialCPU|increase:u_incr_pc
+in[0] => out_a.IN0
+in[0] => out_b.IN0
+in[0] => out[0].DATAIN
+in[1] => out_a.IN1
+in[1] => out_b.IN1
+in[2] => out_a.IN1
+in[2] => out_a.IN1
+out[0] <= in[0].DB_MAX_OUTPUT_PORT_TYPE
+out[1] <= out_b.DB_MAX_OUTPUT_PORT_TYPE
+out[2] <= out_a.DB_MAX_OUTPUT_PORT_TYPE
+
+

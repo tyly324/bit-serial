@@ -1,0 +1,8 @@
+0	//NOP
+7	//load X
+1	//stall
+2	//mult y, d
+1	//stall
+3	//mult x, 1-d
+4	//add y,x
+6	//wait switch off

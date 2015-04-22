@@ -1,0 +1,6 @@
+
+State Machine - |bitSerialCPU|decode:u_decode|state_mult
+Name state_mult.01 state_mult.11 state_mult.00 
+state_mult.00 0 0 0 
+state_mult.01 1 0 1 
+state_mult.11 0 1 1 
